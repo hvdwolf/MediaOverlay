@@ -4,6 +4,7 @@
 
 ## A universal overlay for all mediaplayers that broadcast via MediaSession or NotificationListener.
 
+This is again an app created 90% with AI and 10% "me, myself and I".<br>
 **Note:** This is an overlay, not a widget. A widget can be put on the home screen, but any app that you start will show on top of the widget, thereby making it no longer visible. An overlay will always "float" on top over any other app.<br>
 This overlay can be dragged to any position on the screen.
 
@@ -15,7 +16,7 @@ This overlay can be dragged to any position on the screen.
 
 
 ## Installation
-Just download the apk from [Github](https://github.com/hvdwolf/MediaOverlay/releases/latest) and then side-load the application from your file manager.<br>(Note: When Google asks you to scan the app, then do so. My app is signed and should be absolutely secure and OK, but we live in dangerous times).<br>
+Just download the apk from [Github](https://github.com/hvdwolf/MediaOverlay/releases/latest) and then side-load the application from your file manager.<br>(Note: When Google asks you to scan the app, then do so. My app is signed and should be absolutely safe and secure, but we live in dangerous times).<br>
 
 ## Settings screen
 The settings that might need explanation:

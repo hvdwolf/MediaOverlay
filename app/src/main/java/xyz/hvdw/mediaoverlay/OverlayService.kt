@@ -287,36 +287,46 @@ class OverlayService : Service() {
             val text = textView.text?.toString() ?: return@post
             if (text.isBlank()) return@post
 
-            val textWidth = textView.paint.measureText(text)
-            val containerWidth = textView.width.toFloat()
+            // Wacht tot layout klaar is
+            textView.viewTreeObserver.addOnGlobalLayoutListener(
+                object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        textView.viewTreeObserver.removeOnGlobalLayoutListener(this)
 
-            if (textWidth <= containerWidth) {
-                textView.translationX = 0f
-                return@post
-            }
+                        val textWidth = textView.paint.measureText(text)
+                        val containerWidth = textView.width.toFloat()
 
-            val distance = textWidth + containerWidth
-
-            val animator = ValueAnimator.ofFloat(0f, -distance).apply {
-                duration = (distance * 15).toLong()
-                interpolator = LinearInterpolator()
-                repeatCount = ValueAnimator.INFINITE
-                repeatMode = ValueAnimator.RESTART
-
-                addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationRepeat(animation: Animator) {
-                        textView.postDelayed({
+                        // Geen scroll nodig
+                        if (textWidth <= containerWidth) {
                             textView.translationX = 0f
-                        }, pauseMillis)
+                            return
+                        }
+
+                        val distance = textWidth + containerWidth
+
+                        val animator = ValueAnimator.ofFloat(0f, -distance).apply {
+                            duration = (distance * 15).toLong()
+                            interpolator = LinearInterpolator()
+                            repeatCount = ValueAnimator.INFINITE
+                            repeatMode = ValueAnimator.RESTART
+
+                            addListener(object : AnimatorListenerAdapter() {
+                                override fun onAnimationRepeat(animation: Animator) {
+                                    textView.postDelayed({
+                                        textView.translationX = 0f
+                                    }, pauseMillis)
+                                }
+                            })
+
+                            addUpdateListener { value: ValueAnimator ->
+                                textView.translationX = value.animatedValue as Float
+                            }
+                        }
+
+                        animator.start()
                     }
-                })
-
-                addUpdateListener { value: ValueAnimator ->
-                    textView.translationX = value.animatedValue as Float
                 }
-            }
-
-            animator.start()
+            )
         }
     }
 }
