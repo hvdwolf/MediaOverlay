@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Media Overlay</string>
+
+    <string name="main_title">Superposition média</string>
+    <string name="main_start_overlay">Démarrer la superposition</string>
+    <string name="main_stop_overlay">Arrêter la superposition</string>
+    <string name="main_open_settings">Paramètres</string>
+    <string name="main_minimize_app">Minimiser l’application</string>
+
+    <string name="main_overlay_permission_title">Autorisation de superposition requise</string>
+    <string name="main_overlay_permission_message">
+        Cette application nécessite l’autorisation d’apparaître au-dessus des autres applications.
+    </string>
+    <string name="main_overlay_permission_button">Ouvrir les paramètres</string>
+
+    <string name="main_notification_permission_title">Accès aux notifications requis</string>
+    <string name="main_notification_permission_message">
+        Cette application a besoin de l’accès aux notifications pour lire les informations multimédia.
+    </string>
+    <string name="main_notification_permission_button">Ouvrir l’accès aux notifications</string>
+
+    <string name="settings_title">Paramètres de superposition</string>
+    <string name="settings_transparency_label">Transparence de la superposition</string>
+    <string name="settings_preview_label">Aperçu</string>
+    <string name="settings_autostart">Démarrer la superposition à l’ouverture de l’application</string>
+    <string name="settings_minimize_after_start">Minimiser l’application après le démarrage</string>
+    <string name="settings_polling_interval">Intervalle d’interrogation (ms)</string>
+    <string name="settings_polling_interval_hint">10000</string>
+
+    <string name="overlay_default_title">Aucun média</string>
+    <string name="overlay_default_artist">Aucun lecteur actif</string>
+
+    <string name="overlay_album_art">Pochette d’album</string>
+    <string name="overlay_prev">Piste précédente</string>
+    <string name="overlay_play_pause">Lecture/Pause</string>
+    <string name="overlay_next">Piste suivante</string>
+</resources>

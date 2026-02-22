@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Media Overlay</string>
+
+    <string name="main_title">Медиа-оверлей</string>
+    <string name="main_start_overlay">Запустить оверлей</string>
+    <string name="main_stop_overlay">Остановить оверлей</string>
+    <string name="main_open_settings">Настройки</string>
+    <string name="main_minimize_app">Свернуть приложение</string>
+
+    <string name="main_overlay_permission_title">Требуется разрешение оверлея</string>
+    <string name="main_overlay_permission_message">
+        Этому приложению нужно разрешение отображаться поверх других приложений.
+    </string>
+    <string name="main_overlay_permission_button">Открыть настройки</string>
+
+    <string name="main_notification_permission_title">Требуется доступ к уведомлениям</string>
+    <string name="main_notification_permission_message">
+        Этому приложению нужен доступ к уведомлениям для чтения медиа-информации.
+    </string>
+    <string name="main_notification_permission_button">Открыть доступ к уведомлениям</string>
+
+    <string name="settings_title">Настройки оверлея</string>
+    <string name="settings_transparency_label">Прозрачность оверлея</string>
+    <string name="settings_preview_label">Предпросмотр</string>
+    <string name="settings_autostart">Автоматически запускать оверлей при открытии приложения</string>
+    <string name="settings_minimize_after_start">Сворачивать приложение после запуска оверлея</string>
+    <string name="settings_polling_interval">Интервал опроса (мс)</string>
+    <string name="settings_polling_interval_hint">10000</string>
+
+    <string name="overlay_default_title">Нет медиа</string>
+    <string name="overlay_default_artist">Нет активного плеера</string>
+
+    <string name="overlay_album_art">Обложка альбома</string>
+    <string name="overlay_prev">Предыдущий трек</string>
+    <string name="overlay_play_pause">Воспроизведение/Пауза</string>
+    <string name="overlay_next">Следующий трек</string>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+
+    <style name="Theme.MediaOverlay" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Dark variant -->
+    </style>
+
+</resources>

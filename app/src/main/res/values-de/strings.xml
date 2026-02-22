@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Media Overlay</string>
+
+    <string name="main_title">Media overlay</string>
+    <string name="main_start_overlay">Overlay starten</string>
+    <string name="main_stop_overlay">Overlay stoppen</string>
+    <string name="main_open_settings">Einstellungen</string>
+    <string name="main_minimize_app">App minimieren</string>
+
+    <string name="main_overlay_permission_title">Overlay-Berechtigung erforderlich</string>
+    <string name="main_overlay_permission_message">
+        Diese App benötigt die Berechtigung, über anderen Apps angezeigt zu werden.
+    </string>
+    <string name="main_overlay_permission_button">Einstellungen öffnen</string>
+
+    <string name="main_notification_permission_title">Benachrichtigungszugriff erforderlich</string>
+    <string name="main_notification_permission_message">
+        Diese App benötigt Benachrichtigungszugriff, um Medieninformationen zu lesen.
+    </string>
+    <string name="main_notification_permission_button">Benachrichtigungszugriff öffnen</string>
+
+    <string name="settings_title">Overlay-Einstellungen</string>
+    <string name="settings_transparency_label">Overlay-Transparenz</string>
+    <string name="settings_preview_label">Vorschau</string>
+    <string name="settings_autostart">Overlay automatisch beim Öffnen der App starten</string>
+    <string name="settings_minimize_after_start">App nach Start des Overlays minimieren</string>
+    <string name="settings_polling_interval">Abfrageintervall (ms)</string>
+    <string name="settings_polling_interval_hint">10000</string>
+
+    <string name="overlay_default_title">Keine Medien</string>
+    <string name="overlay_default_artist">Kein Player aktiv</string>
+
+    <string name="overlay_album_art">Albumcover</string>
+    <string name="overlay_prev">Vorheriger Titel</string>
+    <string name="overlay_play_pause">Wiedergabe/Pause</string>
+    <string name="overlay_next">Nächster Titel</string>
+</resources>

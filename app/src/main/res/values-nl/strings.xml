@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App -->
+    <string name="app_name">Media Overlay</string>
+
+    <!-- MainActivity -->
+    <string name="main_title">Media overlay</string>
+    <string name="main_start_overlay">Start overlay</string>
+    <string name="main_stop_overlay">Stop overlay</string>
+    <string name="main_open_settings">Instellingen</string>
+    <string name="main_minimize_app">Minimaliseer app</string>
+
+    <!-- Overlay permission -->
+    <string name="main_overlay_permission_title">Overlay-toestemming nodig</string>
+    <string name="main_overlay_permission_message">
+        Deze app heeft toestemming nodig om boven andere apps te tonen.
+    </string>
+    <string name="main_overlay_permission_button">Toon instellingen</string>
+
+    <!-- Notification listener permission -->
+    <string name="main_notification_permission_title">Meldingstoegang nodig</string>
+    <string name="main_notification_permission_message">
+        Deze app heeft toegang tot meldingen nodig om media-informatie te kunnen lezen.
+    </string>
+    <string name="main_notification_permission_button">Open meldingstoegang</string>
+
+    <!-- SettingsActivity -->
+    <string name="settings_title">Overlay-instellingen</string>
+    <string name="settings_transparency_label">Transparantie overlay</string>
+    <string name="settings_preview_label">Voorbeeld</string>
+
+    <!-- Overlay defaults -->
+    <string name="overlay_default_title">Geen media</string>
+    <string name="overlay_default_artist">Geen speler actief</string>
+
+    <string name="settings_autostart">Start overlay automatisch bij openen van de app</string>
+    <string name="settings_minimize_after_start">Minimaliseer app na starten van overlay</string>
+    <string name="settings_polling_interval">Polling-interval (ms)</string>
+    <string name="settings_polling_interval_hint">10000</string>
+
+    <string name="overlay_album_art">Albumillustratie</string>
+    <string name="overlay_prev">Vorige nummer</string>
+    <string name="overlay_play_pause">Afspelen/Pauzeren</string>
+    <string name="overlay_next">Volgende nummer</string>
+
+</resources>

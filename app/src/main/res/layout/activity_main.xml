@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="top|center_horizontal">
+
+    <Button
+        android:id="@+id/btnStartOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:text="@string/main_start_overlay"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btnStopOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/button_background"
+        android:text="@string/main_stop_overlay"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btnSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/button_outlined"
+        android:text="@string/main_open_settings"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btnMinimize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/button_outlined"
+        android:text="@string/main_minimize_app"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="16sp" />
+
+
+</LinearLayout>

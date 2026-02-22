@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Media Overlay</string>
+
+    <string name="main_title">Nakładka multimedialna</string>
+    <string name="main_start_overlay">Uruchom nakładkę</string>
+    <string name="main_stop_overlay">Zatrzymaj nakładkę</string>
+    <string name="main_open_settings">Ustawienia</string>
+    <string name="main_minimize_app">Zminimalizuj aplikację</string>
+
+    <string name="main_overlay_permission_title">Wymagane uprawnienie nakładki</string>
+    <string name="main_overlay_permission_message">
+        Ta aplikacja wymaga uprawnienia do wyświetlania się nad innymi aplikacjami.
+    </string>
+    <string name="main_overlay_permission_button">Otwórz ustawienia</string>
+
+    <string name="main_notification_permission_title">Wymagany dostęp do powiadomień</string>
+    <string name="main_notification_permission_message">
+        Ta aplikacja potrzebuje dostępu do powiadomień, aby odczytywać informacje o mediach.
+    </string>
+    <string name="main_notification_permission_button">Otwórz dostęp do powiadomień</string>
+
+    <string name="settings_title">Ustawienia nakładki</string>
+    <string name="settings_transparency_label">Przezroczystość nakładki</string>
+    <string name="settings_preview_label">Podgląd</string>
+    <string name="settings_autostart">Automatycznie uruchamiaj nakładkę przy otwarciu aplikacji</string>
+    <string name="settings_minimize_after_start">Zminimalizuj aplikację po uruchomieniu nakładki</string>
+    <string name="settings_polling_interval">Interwał odpytywania (ms)</string>
+    <string name="settings_polling_interval_hint">10000</string>
+
+    <string name="overlay_default_title">Brak mediów</string>
+    <string name="overlay_default_artist">Brak aktywnego odtwarzacza</string>
+
+    <string name="overlay_album_art">Okładka albumu</string>
+    <string name="overlay_prev">Poprzedni utwór</string>
+    <string name="overlay_play_pause">Odtwórz/Pauza</string>
+    <string name="overlay_next">Następny utwór</string>
+</resources>

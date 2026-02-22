@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Media Overlay</string>
+
+    <string name="main_title">Suprapunere media</string>
+    <string name="main_start_overlay">Pornește suprapunerea</string>
+    <string name="main_stop_overlay">Oprește suprapunerea</string>
+    <string name="main_open_settings">Setări</string>
+    <string name="main_minimize_app">Minimizează aplicația</string>
+
+    <string name="main_overlay_permission_title">Permisiune de suprapunere necesară</string>
+    <string name="main_overlay_permission_message">
+        Această aplicație are nevoie de permisiunea de a apărea peste alte aplicații.
+    </string>
+    <string name="main_overlay_permission_button">Deschide setările</string>
+
+    <string name="main_notification_permission_title">Acces la notificări necesar</string>
+    <string name="main_notification_permission_message">
+        Această aplicație are nevoie de acces la notificări pentru a citi informațiile media.
+    </string>
+    <string name="main_notification_permission_button">Deschide accesul la notificări</string>
+
+    <string name="settings_title">Setări suprapunere</string>
+    <string name="settings_transparency_label">Transparența suprapunerii</string>
+    <string name="settings_preview_label">Previzualizare</string>
+    <string name="settings_autostart">Pornește suprapunerea automat la deschiderea aplicației</string>
+    <string name="settings_minimize_after_start">Minimizează aplicația după pornirea suprapunerii</string>
+    <string name="settings_polling_interval">Interval de interogare (ms)</string>
+    <string name="settings_polling_interval_hint">10000</string>
+
+    <string name="overlay_default_title">Fără media</string>
+    <string name="overlay_default_artist">Niciun player activ</string>
+
+    <string name="overlay_album_art">Copertă album</string>
+    <string name="overlay_prev">Piesa anterioară</string>
+    <string name="overlay_play_pause">Redare/Pauză</string>
+    <string name="overlay_next">Piesa următoare</string>
+</resources>
