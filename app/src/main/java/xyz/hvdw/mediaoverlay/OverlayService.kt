@@ -24,9 +24,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
-import androidx.core.graphics.drawable.toBitmap
 import xyz.hvdw.mediaoverlay.R
-
 
 class OverlayService : Service() {
 
@@ -53,7 +51,7 @@ class OverlayService : Service() {
 
         NotificationListener.callback = {
             try {
-                updateOverlayFromNotification()
+                updateOverlayFromMediaSession()
             } catch (_: Exception) {}
         }
     }
@@ -75,7 +73,6 @@ class OverlayService : Service() {
         val titleView = overlayView.findViewById<TextView>(R.id.titleText)
         val artistView = overlayView.findViewById<TextView>(R.id.artistText)
 
-        // Marquee activeren
         titleView.isSelected = true
         artistView.isSelected = true
 
@@ -150,7 +147,7 @@ class OverlayService : Service() {
         poller = object : Runnable {
             override fun run() {
                 try {
-                    updateOverlayFromNotification()
+                    updateOverlayFromMediaSession()
                 } catch (_: Exception) {}
 
                 val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
@@ -161,27 +158,41 @@ class OverlayService : Service() {
         handler.post(poller!!)
     }
 
-    private fun updateOverlayFromNotification() {
-        val title = NotificationListener.lastTitle
-        val artist = NotificationListener.lastArtist
-        val art = NotificationListener.lastAlbumArt
-        val pkg = NotificationListener.lastPackage
-        val isPlaying = NotificationListener.lastIsPlaying
+    private fun updateOverlayFromMediaSession() {
+        val controller = getCurrentController() ?: return
+        val metadata = controller.metadata
+        val state = controller.playbackState
 
-        if (title == null && artist == null && art == null) return
+        val title = metadata?.getString(MediaMetadata.METADATA_KEY_TITLE) ?: ""
+        val artist = metadata?.getString(MediaMetadata.METADATA_KEY_ARTIST) ?: ""
+        val album = metadata?.getString(MediaMetadata.METADATA_KEY_ALBUM)
+        val art =
+            metadata?.getBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART)
+                ?: metadata?.getBitmap(MediaMetadata.METADATA_KEY_ART)
+                ?: metadata?.getBitmap(MediaMetadata.METADATA_KEY_DISPLAY_ICON)
 
-        lastPackageName = pkg
-        saveLastPackageName(pkg)
+        lastPackageName = controller.packageName
+        saveLastPackageName(controller.packageName)
 
         val titleView = overlayView.findViewById<TextView>(R.id.titleText)
         val artistView = overlayView.findViewById<TextView>(R.id.artistText)
+        val albumView = overlayView.findViewById<TextView>(R.id.albumText)
         val artView = overlayView.findViewById<ImageView>(R.id.albumArt)
         val btnPlayPause = overlayView.findViewById<ImageButton>(R.id.btnPlayPause)
 
-        titleView.text = title ?: getString(R.string.overlay_default_title)
-        artistView.text = artist ?: getString(R.string.overlay_default_artist)
+        titleView.text = title
+        artistView.text = artist
+
+        if (album.isNullOrBlank()) {
+            albumView.visibility = View.GONE
+        } else {
+            albumView.visibility = View.VISIBLE
+            albumView.text = album
+        }
+
         startSmoothMarquee(titleView)
         startSmoothMarquee(artistView)
+        if (!album.isNullOrBlank()) startSmoothMarquee(albumView)
 
         if (art != null) {
             artView.setImageBitmap(art)
@@ -189,19 +200,14 @@ class OverlayService : Service() {
             artView.setImageResource(R.drawable.ic_music_placeholder)
         }
 
-        val controller = getCurrentController()
-        val state = controller?.playbackState?.state
-
-        val playing = state == PlaybackState.STATE_PLAYING
-
+        val playing = state?.state == PlaybackState.STATE_PLAYING
         btnPlayPause.setImageResource(
-            if (playing) R.drawable.ic_pause
-            else R.drawable.ic_play
+            if (playing) R.drawable.ic_pause else R.drawable.ic_play
         )
     }
 
     private fun getCurrentController(): MediaController? {
-        val component = android.content.ComponentName(this, NotificationListener::class.java)
+        val component = ComponentName(this, NotificationListener::class.java)
 
         val controllers = try {
             mediaSessionManager.getActiveSessions(component) ?: emptyList()
@@ -211,6 +217,10 @@ class OverlayService : Service() {
 
         if (controllers.isEmpty()) return null
 
+        NotificationListener.lastPackage?.let { pkg ->
+            controllers.firstOrNull { it.packageName == pkg }?.let { return it }
+        }
+
         lastPackageName?.let { pkg ->
             controllers.firstOrNull { it.packageName == pkg }?.let { return it }
         }
@@ -218,16 +228,11 @@ class OverlayService : Service() {
         return controllers.firstOrNull()
     }
 
-
     private fun sendTransportControl(action: Long) {
         val controller = getCurrentController() ?: return
         val transport = controller.transportControls
 
         when (action) {
-            PlaybackState.ACTION_PLAY_PAUSE -> {
-                val state = controller.playbackState?.state
-                if (state == PlaybackState.STATE_PLAYING) transport.pause() else transport.play()
-            }
             PlaybackState.ACTION_SKIP_TO_NEXT -> transport.skipToNext()
             PlaybackState.ACTION_SKIP_TO_PREVIOUS -> transport.skipToPrevious()
         }
@@ -243,7 +248,6 @@ class OverlayService : Service() {
             controller.transportControls.play()
         }
     }
-
 
     private fun saveLastPackageName(pkg: String?) {
         val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
@@ -280,7 +284,10 @@ class OverlayService : Service() {
 
     private fun startSmoothMarquee(textView: TextView, pauseMillis: Long = 2500) {
         textView.post {
-            val textWidth = textView.paint.measureText(textView.text.toString())
+            val text = textView.text?.toString() ?: return@post
+            if (text.isBlank()) return@post
+
+            val textWidth = textView.paint.measureText(text)
             val containerWidth = textView.width.toFloat()
 
             if (textWidth <= containerWidth) {
@@ -290,26 +297,26 @@ class OverlayService : Service() {
 
             val distance = textWidth + containerWidth
 
-            val animator = ValueAnimator.ofFloat(0f, -distance)
-            animator.duration = (distance * 15).toLong()
-            animator.interpolator = LinearInterpolator()
-            animator.repeatCount = ValueAnimator.INFINITE
-            animator.repeatMode = ValueAnimator.RESTART
+            val animator = ValueAnimator.ofFloat(0f, -distance).apply {
+                duration = (distance * 15).toLong()
+                interpolator = LinearInterpolator()
+                repeatCount = ValueAnimator.INFINITE
+                repeatMode = ValueAnimator.RESTART
 
-            animator.addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationRepeat(animation: Animator) {
-                    textView.postDelayed({
-                        textView.translationX = 0f
-                    }, pauseMillis)
+                addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationRepeat(animation: Animator) {
+                        textView.postDelayed({
+                            textView.translationX = 0f
+                        }, pauseMillis)
+                    }
+                })
+
+                addUpdateListener { value: ValueAnimator ->
+                    textView.translationX = value.animatedValue as Float
                 }
-            })
-
-            animator.addUpdateListener { value: ValueAnimator ->
-                textView.translationX = value.animatedValue as Float
             }
 
             animator.start()
         }
     }
-
 }

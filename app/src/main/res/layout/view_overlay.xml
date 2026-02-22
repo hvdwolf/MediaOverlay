@@ -47,6 +47,16 @@
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:text="@string/overlay_default_artist" />
+
+            <TextView
+                android:id="@+id/albumText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="none"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:text="" />
         </LinearLayout>
     </LinearLayout>
 
