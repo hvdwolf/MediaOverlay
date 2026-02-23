@@ -44,4 +44,8 @@
     <string name="overlay_play_pause">Afspelen/Pauzeren</string>
     <string name="overlay_next">Volgende nummer</string>
 
+    <string name="settings_overlay_style">Overlay-stijl</string>
+    <string name="settings_overlay_style_classic">Klassieke horizontale overlay met albumart</string>
+    <string name="settings_overlay_style_square">Vierkante overlay met albumart</string>
+
 </resources>

@@ -34,4 +34,9 @@
     <string name="overlay_prev">Предыдущий трек</string>
     <string name="overlay_play_pause">Воспроизведение/Пауза</string>
     <string name="overlay_next">Следующий трек</string>
+
+    <string name="settings_overlay_style">Стиль оверлея</string>
+    <string name="settings_overlay_style_classic">Классический горизонтальный оверлей с обложкой альбома</string>
+    <string name="settings_overlay_style_square">Квадратный оверлей с обложкой альбома</string>
+
 </resources>

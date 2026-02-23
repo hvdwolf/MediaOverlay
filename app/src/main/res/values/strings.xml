@@ -44,4 +44,8 @@
     <string name="overlay_play_pause">Play/Pause</string>
     <string name="overlay_next">Next track</string>
 
+    <string name="settings_overlay_style">Overlay style</string>
+    <string name="settings_overlay_style_classic">Classic horizontal overlay with album art</string>
+    <string name="settings_overlay_style_square">Square overlay with album art</string>
+
 </resources>

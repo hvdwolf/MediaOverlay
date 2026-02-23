@@ -34,4 +34,9 @@
     <string name="overlay_prev">Piesa anterioară</string>
     <string name="overlay_play_pause">Redare/Pauză</string>
     <string name="overlay_next">Piesa următoare</string>
+
+    <string name="settings_overlay_style">Stilul overlay-ului</string>
+    <string name="settings_overlay_style_classic">Overlay orizontal clasic cu copertă de album</string>
+    <string name="settings_overlay_style_square">Overlay pătrat cu copertă de album</string>
+
 </resources>

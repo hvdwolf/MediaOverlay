@@ -24,13 +24,13 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
-import xyz.hvdw.mediaoverlay.R
 
 class OverlayService : Service() {
 
     private lateinit var windowManager: WindowManager
     private lateinit var mediaSessionManager: MediaSessionManager
     private lateinit var overlayView: View
+    private lateinit var root: View
     private var layoutParams: WindowManager.LayoutParams? = null
 
     private var lastPackageName: String? = null
@@ -68,42 +68,91 @@ class OverlayService : Service() {
 
     private fun createOverlay() {
         val inflater = LayoutInflater.from(this)
-        overlayView = inflater.inflate(R.layout.view_overlay, null)
-
-        val titleView = overlayView.findViewById<TextView>(R.id.titleText)
-        val artistView = overlayView.findViewById<TextView>(R.id.artistText)
-
-        titleView.isSelected = true
-        artistView.isSelected = true
-
         val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
+        val style = prefs.getInt("overlay_style", 0)
         val alpha = prefs.getInt("overlay_alpha", 200)
 
-        layoutParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-            else
-                WindowManager.LayoutParams.TYPE_PHONE,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-            PixelFormat.TRANSLUCENT
-        ).apply {
-            gravity = Gravity.TOP or Gravity.START
-            x = 100
-            y = 100
-        }
+        // Kies layout
+        val layoutId = if (style == 1)
+            R.layout.view_overlay_square
+        else
+            R.layout.view_overlay
 
-        val root = overlayView.findViewById<View>(R.id.overlayRoot)
-        root.background = resources.getDrawable(R.drawable.overlay_background, null)
-        root.background.alpha = alpha
+        // Correct inflaten
+        overlayView = inflater.inflate(layoutId, null, false)
+
+        val titleView = overlayView.findViewById<TextView?>(R.id.titleText)
+        val artistView = overlayView.findViewById<TextView?>(R.id.artistText)
+        val albumView = overlayView.findViewById<TextView?>(R.id.albumText)
+        val root = overlayView.findViewById<View?>(R.id.overlayRoot)
+
+        // Marquee-ready
+        titleView?.isSelected = true
+        artistView?.isSelected = true
+        albumView?.isSelected = true
+
+        // LayoutParams PER STIJL
+        layoutParams =
+            if (style == 1) {
+                // Square overlay: vaste maat
+                WindowManager.LayoutParams(
+                    dpToPx(250),
+                    dpToPx(250),
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                    else
+                        WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                    PixelFormat.TRANSLUCENT
+                )
+            } else {
+                // Classic overlay: wrap_content
+                WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                    else
+                        WindowManager.LayoutParams.TYPE_PHONE,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                    PixelFormat.TRANSLUCENT
+                )
+            }.apply {
+                gravity = Gravity.TOP or Gravity.START
+                x = 100
+                y = 100
+            }
+
+        // Achtergrond per stijl
+        if (root != null) {
+            if (style == 0) {
+                // Klassieke overlay → overlay_background gebruiken
+                val bg = resources.getDrawable(R.drawable.overlay_background, null)
+                bg.alpha = alpha
+                root.background = bg
+            } else {
+                // Vierkante overlay → zwarte achtergrond + ronde hoeken
+                val bg = resources.getDrawable(R.drawable.square_overlay_background, null)
+                bg.alpha = alpha
+                root.background = bg
+            }
+        }
 
         setupOverlayUi(overlayView)
         windowManager.addView(overlayView, layoutParams)
-        makeDraggable(root)
+
+        // Marquee pas starten NA toevoegen overlay
+        handler.post { updateOverlayFromMediaSession() }
+
+        root?.let { makeDraggable(it) }
     }
+
+
+
 
     private fun setupOverlayUi(view: View) {
         val btnPlayPause = view.findViewById<ImageButton>(R.id.btnPlayPause)
@@ -174,37 +223,53 @@ class OverlayService : Service() {
         lastPackageName = controller.packageName
         saveLastPackageName(controller.packageName)
 
-        val titleView = overlayView.findViewById<TextView>(R.id.titleText)
-        val artistView = overlayView.findViewById<TextView>(R.id.artistText)
-        val albumView = overlayView.findViewById<TextView>(R.id.albumText)
-        val artView = overlayView.findViewById<ImageView>(R.id.albumArt)
-        val btnPlayPause = overlayView.findViewById<ImageButton>(R.id.btnPlayPause)
+        // Alle views optioneel maken
+        val titleView = overlayView.findViewById<TextView?>(R.id.titleText)
+        val artistView = overlayView.findViewById<TextView?>(R.id.artistText)
+        val albumView = overlayView.findViewById<TextView?>(R.id.albumText)
+        val artView = overlayView.findViewById<ImageView?>(R.id.albumArt)
+        val bgArtView = overlayView.findViewById<ImageView?>(R.id.bgAlbumArt)
+        val btnPlayPause = overlayView.findViewById<ImageButton?>(R.id.btnPlayPause)
 
-        titleView.text = title
-        artistView.text = artist
+        // Tekst
+        titleView?.text = title
+        artistView?.text = artist
 
-        if (album.isNullOrBlank()) {
-            albumView.visibility = View.GONE
-        } else {
-            albumView.visibility = View.VISIBLE
-            albumView.text = album
+        if (albumView != null) {
+            if (album.isNullOrBlank()) {
+                albumView.visibility = View.GONE
+            } else {
+                albumView.visibility = View.VISIBLE
+                albumView.text = album
+            }
         }
 
-        startSmoothMarquee(titleView)
-        startSmoothMarquee(artistView)
-        if (!album.isNullOrBlank()) startSmoothMarquee(albumView)
+        // Marquee
+        titleView?.let { startSmoothMarquee(it) }
+        artistView?.let { startSmoothMarquee(it) }
+        if (!album.isNullOrBlank()) albumView?.let { startSmoothMarquee(it) }
 
-        if (art != null) {
-            artView.setImageBitmap(art)
-        } else {
-            artView.setImageResource(R.drawable.ic_music_placeholder)
+        // Albumart als achtergrond (square overlay)
+        if (bgArtView != null) {
+            if (art != null) bgArtView.setImageBitmap(art)
+            else bgArtView.setImageResource(R.drawable.ic_music_placeholder)
         }
 
-        val playing = state?.state == PlaybackState.STATE_PLAYING
-        btnPlayPause.setImageResource(
-            if (playing) R.drawable.ic_pause else R.drawable.ic_play
-        )
+        // Albumart als icoon (classic overlay)
+        if (artView != null) {
+            if (art != null) artView.setImageBitmap(art)
+            else artView.setImageResource(R.drawable.ic_music_placeholder)
+        }
+
+        // Play/pause icoon
+        if (btnPlayPause != null) {
+            val playing = state?.state == PlaybackState.STATE_PLAYING
+            btnPlayPause.setImageResource(
+                if (playing) R.drawable.ic_pause else R.drawable.ic_play
+            )
+        }
     }
+
 
     private fun getCurrentController(): MediaController? {
         val component = ComponentName(this, NotificationListener::class.java)
@@ -282,12 +347,16 @@ class OverlayService : Service() {
         startForeground(1, notification)
     }
 
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
+
+
     private fun startSmoothMarquee(textView: TextView, pauseMillis: Long = 2500) {
         textView.post {
             val text = textView.text?.toString() ?: return@post
             if (text.isBlank()) return@post
 
-            // Wacht tot layout klaar is
             textView.viewTreeObserver.addOnGlobalLayoutListener(
                 object : ViewTreeObserver.OnGlobalLayoutListener {
                     override fun onGlobalLayout() {
@@ -296,7 +365,6 @@ class OverlayService : Service() {
                         val textWidth = textView.paint.measureText(text)
                         val containerWidth = textView.width.toFloat()
 
-                        // Geen scroll nodig
                         if (textWidth <= containerWidth) {
                             textView.translationX = 0f
                             return

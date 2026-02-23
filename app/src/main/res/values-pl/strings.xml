@@ -34,4 +34,9 @@
     <string name="overlay_prev">Poprzedni utwór</string>
     <string name="overlay_play_pause">Odtwórz/Pauza</string>
     <string name="overlay_next">Następny utwór</string>
+
+    <string name="settings_overlay_style">Styl nakładki</string>
+    <string name="settings_overlay_style_classic">Klasyczna pozioma nakładka z okładką albumu</string>
+    <string name="settings_overlay_style_square">Kwadratowa nakładka z okładką albumu</string>
+
 </resources>

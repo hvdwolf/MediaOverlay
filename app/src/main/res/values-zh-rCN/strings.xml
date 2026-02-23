@@ -34,4 +34,9 @@
     <string name="overlay_prev">上一曲</string>
     <string name="overlay_play_pause">播放/暂停</string>
     <string name="overlay_next">下一曲</string>
+
+    <string name="settings_overlay_style">覆盖样式</string>
+    <string name="settings_overlay_style_classic">经典横向覆盖，带专辑封面</string>
+    <string name="settings_overlay_style_square">方形覆盖，带专辑封面</string>
+
 </resources>
