@@ -148,7 +148,8 @@ class OverlayService : Service() {
         // Marquee pas starten NA toevoegen overlay
         handler.post { updateOverlayFromMediaSession() }
 
-        root?.let { makeDraggable(it) }
+        //root?.let { makeDraggable(it) }
+        makeDraggable(overlayView)
     }
 
 
