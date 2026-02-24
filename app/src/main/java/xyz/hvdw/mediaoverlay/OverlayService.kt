@@ -245,9 +245,9 @@ class OverlayService : Service() {
         }
 
         // Marquee
-        titleView?.let { startSmoothMarquee(it) }
-        artistView?.let { startSmoothMarquee(it) }
-        if (!album.isNullOrBlank()) albumView?.let { startSmoothMarquee(it) }
+        titleView?.let { startSmoothMarqueeIfNeeded(it) }
+        artistView?.let { startSmoothMarqueeIfNeeded(it) }
+        if (!album.isNullOrBlank()) albumView?.let { startSmoothMarqueeIfNeeded(it) }
 
         // Albumart als achtergrond (square overlay)
         if (bgArtView != null) {
@@ -352,49 +352,64 @@ class OverlayService : Service() {
     }
 
 
-    private fun startSmoothMarquee(textView: TextView, pauseMillis: Long = 2500) {
+    private fun startSmoothMarqueeIfNeeded(textView: TextView, pauseMillis: Long = 200) {
         textView.post {
             val text = textView.text?.toString() ?: return@post
             if (text.isBlank()) return@post
 
-            textView.viewTreeObserver.addOnGlobalLayoutListener(
-                object : ViewTreeObserver.OnGlobalLayoutListener {
-                    override fun onGlobalLayout() {
-                        textView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            // Cancel any previous animator stored in the tag
+            (textView.getTag(R.id.marquee_animator) as? ValueAnimator)?.cancel()
 
-                        val textWidth = textView.paint.measureText(text)
-                        val containerWidth = textView.width.toFloat()
+            fun measureAndStart() {
+                val textWidth = textView.paint.measureText(text)
+                val containerWidth = textView.width.toFloat()
 
-                        if (textWidth <= containerWidth) {
-                            textView.translationX = 0f
-                            return
+                // If width is still 0, retry shortly
+                if (containerWidth == 0f) {
+                    textView.postDelayed({ measureAndStart() }, 30)
+                    return
+                }
+
+                // Only scroll if text is actually too long
+                if (textWidth <= containerWidth) {
+                    textView.translationX = 0f
+                    return
+                }
+
+                // Start offset (1.3 × width)
+                val startOffset = containerWidth * 1.3f
+                val distance = textWidth + startOffset
+                val duration = (distance * 12).toLong()
+
+                val animator = ValueAnimator.ofFloat(startOffset, -textWidth).apply {
+                    this.duration = duration
+                    interpolator = LinearInterpolator()
+                    repeatCount = ValueAnimator.INFINITE
+                    repeatMode = ValueAnimator.RESTART
+
+                    addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationRepeat(animation: Animator) {
+                            textView.postDelayed({
+                                textView.translationX = startOffset
+                            }, pauseMillis)
                         }
+                    })
 
-                        val distance = textWidth + containerWidth
-
-                        val animator = ValueAnimator.ofFloat(0f, -distance).apply {
-                            duration = (distance * 15).toLong()
-                            interpolator = LinearInterpolator()
-                            repeatCount = ValueAnimator.INFINITE
-                            repeatMode = ValueAnimator.RESTART
-
-                            addListener(object : AnimatorListenerAdapter() {
-                                override fun onAnimationRepeat(animation: Animator) {
-                                    textView.postDelayed({
-                                        textView.translationX = 0f
-                                    }, pauseMillis)
-                                }
-                            })
-
-                            addUpdateListener { value: ValueAnimator ->
-                                textView.translationX = value.animatedValue as Float
-                            }
-                        }
-
-                        animator.start()
+                    addUpdateListener { value ->
+                        textView.translationX = value.animatedValue as Float
                     }
                 }
-            )
+
+                // Store animator so we can cancel it later
+                textView.setTag(R.id.marquee_animator, animator)
+
+                textView.translationX = startOffset
+                animator.start()
+            }
+
+            // Start measurement
+            measureAndStart()
         }
     }
+
 }
