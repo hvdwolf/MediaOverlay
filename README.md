@@ -4,9 +4,11 @@
 
 ## A universal overlay for all mediaplayers that broadcast via MediaSession or NotificationListener.
 
-This is again an app created 90% with AI and 10% "me, myself and I".<br>
+This is again an app created 80% with AI and 20% "me, myself and I".<br>
+It is a universal overlay for all media players that support the standaard Android MediaSession format. It does not support FYT/Dudu music and FYT/DuDu radio as those are probably the only players in the world that do not support this world standard.<br>
 **Note:** This is an overlay, not a widget. A widget can be put on the home screen, but any app that you start will show on top of the widget, thereby making it no longer visible. An overlay will always "float" on top over any other app.<br>
-This overlay can be dragged to any position on the screen.
+This overlay can be dragged to any position on the screen.<br>
+Why this app? DuDu has a widget which supports all mediaplayers that support the MediaSession format. Vasyl91 made the excellent ["Display Media Titles for FYT"](https://xdaforums.com/t/display-media-titles-for-fyt.4692979/).
 
 **This app does not collect, store or share any personal information. It is 100% privacy friendly.**
 
@@ -14,6 +16,10 @@ This overlay can be dragged to any position on the screen.
  - Overlay permission - Draw over other apps.
  - Notification permission - Get media metadata but also use prev/next/play/pause buttons from overlay.
 
+## Small video
+This is a 50% reduced video from my Samsung S22 Ultra. Why from my phone? Because any Android 10+ device should have built-in screen recorder, but the FYTs/DUDu's don't have it. Any screen recorder I now tested on the DuDu is terrible.<br>
+So I used the built-in screen recorder on my Samsung.
+[Media Overlay](https://drive.google.com/file/d/1EQa45SmrPkXC7YfW3xHbgchR9Pb3nRE6/view?usp=sharing)
 
 ## Installation
 Just download the apk from [Github](https://github.com/hvdwolf/MediaOverlay/releases/latest) and then side-load the application from your file manager.<br>(Note: When Google asks you to scan the app, then do so. My app is signed and should be absolutely safe and secure, but we live in dangerous times).<br>
