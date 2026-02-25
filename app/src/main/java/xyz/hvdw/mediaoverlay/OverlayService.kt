@@ -246,9 +246,12 @@ class OverlayService : Service() {
         }
 
         // Marquee
-        titleView?.let { startSmoothMarqueeIfNeeded(it) }
-        artistView?.let { startSmoothMarqueeIfNeeded(it) }
-        if (!album.isNullOrBlank()) albumView?.let { startSmoothMarqueeIfNeeded(it) }
+        //titleView?.let { startSmoothMarqueeIfNeeded(it) }
+        //artistView?.let { startSmoothMarqueeIfNeeded(it) }
+        //if (!album.isNullOrBlank()) albumView?.let { startSmoothMarqueeIfNeeded(it) }
+        titleView?.let { it }
+        artistView?.let { it }
+        if (!album.isNullOrBlank()) albumView?.let { it }
 
         // Albumart als achtergrond (square overlay)
         if (bgArtView != null) {
