@@ -27,8 +27,10 @@ Just download the apk from [Github](https://github.com/hvdwolf/MediaOverlay/rele
 
 ## Settings screen
 The settings that might need explanation:
+
 - polling interval - the number in seconds it checks for new metadata (default: 10 seconds)
 - transpararency overlay - You can make it from totally solid (100% opaque) to totally (100%) transparent.
+- Media Players:  The app shows all apps that are able to use the media channel to produce audio. That could also be many mediaplayers that you installed. You can here select for which players you want to show the overlay.
 
 ## Releases
 The releases are done via [my github](https://github.com/hvdwolf/MediaOverlay/releases/latest).<br>
