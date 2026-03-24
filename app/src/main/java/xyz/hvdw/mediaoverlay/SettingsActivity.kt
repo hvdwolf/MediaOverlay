@@ -1,6 +1,7 @@
 package xyz.hvdw.mediaoverlay
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,6 +19,11 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var radioGroupStyle: RadioGroup
     private lateinit var radioStyleClassic: RadioButton
     private lateinit var radioStyleSquare: RadioButton
+
+    private lateinit var switchStartOnPlay: Switch
+    private lateinit var switchStartOnAppOpen: Switch
+    private lateinit var mediaAppList: LinearLayout
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +87,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // -----------------------------
-        // OVERLAY STIJL (NIEUW)
+        // OVERLAY STIJL
         // -----------------------------
         radioGroupStyle = findViewById(R.id.radioOverlayStyle)
         radioStyleClassic = findViewById(R.id.radioStyleClassic)
@@ -98,9 +104,113 @@ class SettingsActivity : AppCompatActivity() {
             }
             prefs.edit().putInt("overlay_style", newStyle).apply()
         }
+
+        // -----------------------------
+        // START AUTOMATICALLY
+        // -----------------------------
+        switchStartOnPlay = findViewById(R.id.switchStartOnPlay)
+        switchStartOnAppOpen = findViewById(R.id.switchStartOnAppOpen)
+        mediaAppList = findViewById(R.id.mediaAppList)
+
+        switchStartOnPlay.isChecked = prefs.getBoolean("start_on_play", true)
+        switchStartOnAppOpen.isChecked = prefs.getBoolean("start_on_app_open", false)
+
+        switchStartOnPlay.setOnCheckedChangeListener { _, value ->
+            prefs.edit().putBoolean("start_on_play", value).apply()
+        }
+
+        switchStartOnAppOpen.setOnCheckedChangeListener { _, value ->
+            prefs.edit().putBoolean("start_on_app_open", value).apply()
+        }
+
+        // Dynamische lijst van mediaspelers
+        val installedPlayers = detectMediaApps()
+        val selectedApps = prefs.getStringSet("auto_start_apps", emptySet())!!.toMutableSet()
+
+        installedPlayers.forEach { pkg ->
+            val cb = CheckBox(this).apply {
+                text = pkg
+                isChecked = selectedApps.contains(pkg)
+                setOnCheckedChangeListener { _, checked ->
+                    if (checked) selectedApps.add(pkg)
+                    else selectedApps.remove(pkg)
+                    prefs.edit().putStringSet("auto_start_apps", selectedApps).apply()
+                }
+            }
+            mediaAppList.addView(cb)
+        }
+
     }
 
     private fun updatePreview(alpha: Int) {
         preview.background?.alpha = alpha
     }
+
+    private fun detectMediaApps(): List<String> {
+        val pm = packageManager
+        val apps = pm.getInstalledApplications(0)
+
+        // This set will collect all detected media-capable apps
+        val mediaApps = mutableSetOf<String>()
+
+        // ---------------------------------------------------------
+        // 1. Detect apps with an active MediaSession
+        // ---------------------------------------------------------
+        // This is the most reliable method: if an app exposes a MediaSession,
+        // it is almost certainly a media player.
+        val msm = getSystemService(Context.MEDIA_SESSION_SERVICE) as android.media.session.MediaSessionManager
+        try {
+            val controllers = msm.getActiveSessions(null)
+            controllers.forEach { controller ->
+                mediaApps.add(controller.packageName)
+            }
+        } catch (_: Exception) {
+            // Some devices may not allow querying active sessions without notification access
+        }
+
+        // ---------------------------------------------------------
+        // 2. Detect apps that request audio/media-related permissions
+        // ---------------------------------------------------------
+        // Many media players request permissions like RECORD_AUDIO, MODIFY_AUDIO_SETTINGS,
+        // or other media-related permissions. This is a good fallback.
+        apps.forEach { app ->
+            val pkg = app.packageName
+            try {
+                val info = pm.getPackageInfo(pkg, PackageManager.GET_PERMISSIONS)
+                val perms = info.requestedPermissions ?: emptyArray()
+
+                // Check if any permission contains AUDIO or MEDIA
+                if (perms.any { p ->
+                        p.contains("AUDIO", ignoreCase = true) ||
+                        p.contains("MEDIA", ignoreCase = true)
+                    }) {
+                    mediaApps.add(pkg)
+                }
+            } catch (_: Exception) {
+                // Some apps may not expose permissions cleanly; ignore errors
+            }
+        }
+
+        // ---------------------------------------------------------
+        // 3. Add known media players as fallback
+        // ---------------------------------------------------------
+        // Some apps (like FYT radio or custom car players) do NOT expose MediaSessions
+        // and do NOT request audio permissions. We add them manually.
+        val known = listOf(
+            "com.maxmpz.audioplayer",   // Poweramp
+            "com.aimp.player",          // AIMP
+            "com.spotify.music",        // Spotify
+            "com.google.android.music", // Google Play Music (legacy)
+            "com.navradio",             // FYT NavRadio
+            "com.android.car.media",    // Generic car media player
+            "de.zorillasoft.musicfolderplayer",
+            "de.zorillasoft.musicfolderplayer.donate"
+        )
+
+        mediaApps.addAll(known)
+
+        // Return sorted list for a clean UI
+        return mediaApps.toList().sorted()
+    }
+
 }

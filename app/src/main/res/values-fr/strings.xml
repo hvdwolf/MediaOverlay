@@ -39,4 +39,9 @@
     <string name="settings_overlay_style_classic">Overlay horizontal classique avec pochette d’album</string>
     <string name="settings_overlay_style_square">Overlay carré avec pochette d’album</string>
 
+    <string name="settings_autostart_header">Démarrage automatique</string>
+    <string name="settings_start_on_play">Démarrer l’overlay automatiquement au début de la lecture</string>
+    <string name="settings_start_on_app_open">Démarrer l’overlay lorsque l’application sélectionnée s’ouvre</string>
+    <string name="settings_media_apps_label">Applications de lecture multimédia</string>
+
 </resources>

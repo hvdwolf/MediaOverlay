@@ -39,4 +39,9 @@
     <string name="settings_overlay_style_classic">Класичний горизонтальний оверлей з обкладинкою альбому</string>
     <string name="settings_overlay_style_square">Квадратний оверлей з обкладинкою альбому</string>
 
+    <string name="settings_autostart_header">Автоматичний запуск</string>
+    <string name="settings_start_on_play">Автоматично запускати оверлей під час початку відтворення</string>
+    <string name="settings_start_on_app_open">Запускати оверлей при відкритті вибраного застосунку</string>
+    <string name="settings_media_apps_label">Медіаплеєри</string>
+
 </resources>

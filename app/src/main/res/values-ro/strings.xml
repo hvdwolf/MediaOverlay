@@ -39,4 +39,9 @@
     <string name="settings_overlay_style_classic">Overlay orizontal clasic cu copertă de album</string>
     <string name="settings_overlay_style_square">Overlay pătrat cu copertă de album</string>
 
+    <string name="settings_autostart_header">Pornire automată</string>
+    <string name="settings_start_on_play">Pornește automat overlay-ul când începe redarea</string>
+    <string name="settings_start_on_app_open">Pornește overlay-ul când aplicația selectată este deschisă</string>
+    <string name="settings_media_apps_label">Aplicații player media</string>
+
 </resources>

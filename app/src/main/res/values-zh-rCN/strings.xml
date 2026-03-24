@@ -39,4 +39,9 @@
     <string name="settings_overlay_style_classic">经典横向覆盖，带专辑封面</string>
     <string name="settings_overlay_style_square">方形覆盖，带专辑封面</string>
 
+    <string name="settings_autostart_header">自动启动</string>
+    <string name="settings_start_on_play">播放开始时自动启动覆盖层</string>
+    <string name="settings_start_on_app_open">打开所选应用时启动覆盖层</string>
+    <string name="settings_media_apps_label">媒体播放器应用</string>
+
 </resources>

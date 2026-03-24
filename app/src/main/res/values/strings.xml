@@ -48,4 +48,9 @@
     <string name="settings_overlay_style_classic">Classic horizontal overlay with album art</string>
     <string name="settings_overlay_style_square">Square overlay with album art</string>
 
+    <string name="settings_autostart_header">Automatic start</string>
+    <string name="settings_start_on_play">Start overlay automatically when playback begins</string>
+    <string name="settings_start_on_app_open">Start overlay when selected app opens</string>
+    <string name="settings_media_apps_label">Media player apps</string>
+
 </resources>

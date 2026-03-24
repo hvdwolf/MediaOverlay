@@ -48,4 +48,9 @@
     <string name="settings_overlay_style_classic">Klassieke horizontale overlay met albumart</string>
     <string name="settings_overlay_style_square">Vierkante overlay met albumart</string>
 
+    <string name="settings_autostart_header">Automatisch starten</string>
+    <string name="settings_start_on_play">Overlay automatisch starten wanneer afspelen begint</string>
+    <string name="settings_start_on_app_open">Overlay starten wanneer de geselecteerde app opent</string>
+    <string name="settings_media_apps_label">Mediaspeler-apps</string>
+
 </resources>

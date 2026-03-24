@@ -11,8 +11,8 @@ android {
         applicationId = "xyz.hvdw.mediaoverlay"
         minSdk = 23     // Android 6
         targetSdk = 33  // Android 13
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
 
         // Only include the ABIs you want in the final APK
         ndk {
