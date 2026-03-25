@@ -4,29 +4,32 @@
     android:id="@+id/overlayRoot"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="8dp"
     android:background="@drawable/overlay_background">
 
-    <!-- Top row: album art + text -->
+    <!-- LEFT SIDE: Full-height album art -->
+    <ImageView
+        android:id="@+id/albumArt"
+        android:layout_width="90dp"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_music_placeholder"
+        android:contentDescription="@string/overlay_album_art" />
+
+    <!-- RIGHT SIDE: Text + Buttons -->
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp">
 
-        <ImageView
-            android:id="@+id/albumArt"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_music_placeholder"
-            android:contentDescription="@string/overlay_album_art" />
-
+        <!-- Text block -->
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="8dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/titleText"
@@ -70,41 +73,42 @@
                 android:textSize="14sp"
                 android:text="" />
         </LinearLayout>
-    </LinearLayout>
 
-    <!-- Bottom row: media controls -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="6dp">
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="6dp">
 
-        <ImageButton
-            android:id="@+id/btnPrev"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_prev"
-            android:contentDescription="@string/overlay_prev" />
+            <ImageButton
+                android:id="@+id/btnPrev"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_prev"
+                android:contentDescription="@string/overlay_prev" />
 
-        <ImageButton
-            android:id="@+id/btnPlayPause"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_play"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            android:contentDescription="@string/overlay_play_pause" />
+            <ImageButton
+                android:id="@+id/btnPlayPause"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_play"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="@string/overlay_play_pause" />
 
-        <ImageButton
-            android:id="@+id/btnNext"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_next"
-            android:contentDescription="@string/overlay_next" />
+            <ImageButton
+                android:id="@+id/btnNext"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_next"
+                android:contentDescription="@string/overlay_next" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>
