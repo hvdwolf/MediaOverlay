@@ -14,6 +14,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
+        val autostart = prefs.getBoolean("autostart_overlay", false)
+
+        if (autostart) {
+            startOverlay()
+        }
+
         val btnStartOverlay = findViewById<Button>(R.id.btnStartOverlay)
         val btnStopOverlay = findViewById<Button>(R.id.btnStopOverlay)
         val btnSettings = findViewById<Button>(R.id.btnSettings)
