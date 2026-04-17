@@ -44,4 +44,5 @@
     <string name="settings_start_on_app_open">Overlay starten, wenn die ausgewählte App geöffnet wird</string>
     <string name="settings_media_apps_label">Mediaplayer-Apps</string>
 
+    <string name="overlay_size_title">Overlay-Skalierung</string>
 </resources>

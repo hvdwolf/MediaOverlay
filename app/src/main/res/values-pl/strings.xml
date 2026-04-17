@@ -44,4 +44,5 @@
     <string name="settings_start_on_app_open">Uruchamiaj nakładkę po otwarciu wybranej aplikacji</string>
     <string name="settings_media_apps_label">Aplikacje odtwarzaczy multimedialnych</string>
 
+    <string name="overlay_size_title">Skalowanie nakładki</string>
 </resources>

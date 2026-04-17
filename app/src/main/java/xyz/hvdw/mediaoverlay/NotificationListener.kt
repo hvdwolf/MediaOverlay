@@ -20,30 +20,30 @@ class NotificationListener : NotificationListenerService() {
         val extras = notif.extras
         val pkg = sbn.packageName
 
-        // Only handle media notifications
         val isMedia = notif.category == Notification.CATEGORY_TRANSPORT ||
-                      extras.containsKey("android.mediaSession")
-
+                  extras.containsKey("android.mediaSession")
         if (!isMedia) return
 
-        // Store last media package
-        lastPackage = pkg
-
-        // -----------------------------
-        // AUTO-START OVERLAY ON PLAY
-        // -----------------------------
         val prefs = getSharedPreferences("overlay_prefs", MODE_PRIVATE)
         val startOnPlay = prefs.getBoolean("start_on_play", false)
         val autoStartApps = prefs.getStringSet("auto_start_apps", emptySet()) ?: emptySet()
 
-        if (startOnPlay && autoStartApps.contains(pkg)) {
+        // 🔴 don't act on not selected apps
+        if (!autoStartApps.contains(pkg)) {
+            return
+        }
+
+        // Only selected apps get here
+        lastPackage = pkg
+
+        if (startOnPlay) {
             val intent = Intent(applicationContext, OverlayService::class.java)
             ContextCompat.startForegroundService(applicationContext, intent)
         }
 
-        // Notify OverlayService that metadata changed
         callback?.invoke()
     }
+
 
     override fun onNotificationRemoved(sbn: StatusBarNotification?) {
         // Do nothing — some players remove notifications on pause.

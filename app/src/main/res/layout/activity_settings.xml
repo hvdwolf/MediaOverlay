@@ -90,7 +90,8 @@
             android:id="@+id/radioOverlayStyle"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" >
 
             <RadioButton
                 android:id="@+id/radioStyleClassic"
@@ -104,6 +105,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RadioGroup>
+
+        <!-- OVERLAY SCALING -->
+        <TextView
+            android:id="@+id/txtSpeedoSizeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:text="@string/overlay_size_title"
+            android:layout_marginBottom="4dp" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txtOverlaySizeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100%"
+                android:textStyle="bold"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginBottom="4dp" />
+
+            <SeekBar
+                android:id="@+id/seekOverlaySize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:max="6" />
+
+        </FrameLayout>
+
 
         <!-- AUTOMATIC START -->
         <TextView

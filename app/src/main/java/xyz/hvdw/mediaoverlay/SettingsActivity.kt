@@ -1,6 +1,7 @@
 package xyz.hvdw.mediaoverlay
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.Editable
@@ -23,6 +24,14 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var switchStartOnPlay: Switch
     private lateinit var switchStartOnAppOpen: Switch
     private lateinit var mediaAppList: LinearLayout
+
+    private val sizeLabels = arrayOf(
+        "50%", "75%", "100%", "125%", "150%", "175%", "200%"
+    )
+
+    private val sizeScales = floatArrayOf(
+        0.50f, 0.75f, 1.00f, 1.25f, 1.50f, 1.75f, 2.00f
+    )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,6 +115,29 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         // -----------------------------
+        // OVERLAY SIZE
+        // -----------------------------
+        val seekOverlaySize = findViewById<SeekBar>(R.id.seekOverlaySize)
+        val txtOverlaySizeValue = findViewById<TextView>(R.id.txtOverlaySizeValue)
+
+        val currentScale = prefs.getFloat("overlay_scale", 1.0f)
+        val currentIndex = sizeScales.indexOfFirst { it == currentScale }.coerceAtLeast(2)
+
+        seekOverlaySize.progress = currentIndex
+        txtOverlaySizeValue.text = sizeLabels[currentIndex]
+
+        seekOverlaySize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                txtOverlaySizeValue.text = sizeLabels[progress]
+                prefs.edit().putFloat("overlay_scale", sizeScales[progress]).apply()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+
+
+        // -----------------------------
         // START AUTOMATICALLY
         // -----------------------------
         switchStartOnPlay = findViewById(R.id.switchStartOnPlay)
@@ -123,6 +155,9 @@ class SettingsActivity : AppCompatActivity() {
             prefs.edit().putBoolean("start_on_app_open", value).apply()
         }
 
+        // -----------------------------
+        // Selectable list of possible media players
+        // -----------------------------
         // Dynamische lijst van mediaspelers
         val installedPlayers = detectMediaApps()
         val selectedApps = prefs.getStringSet("auto_start_apps", emptySet())!!.toMutableSet()
@@ -147,6 +182,47 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun detectMediaApps(): List<String> {
+        val pm = packageManager
+        val intent = Intent(Intent.ACTION_MEDIA_BUTTON)
+
+        val mediaApps = mutableSetOf<String>()
+
+        // 1. Apps die een MediaButtonReceiver hebben
+        val receivers = pm.queryBroadcastReceivers(intent, 0)
+        receivers?.forEach { resolveInfo ->
+            resolveInfo.activityInfo?.packageName?.let { mediaApps.add(it) }
+        }
+
+        // 2. Apps die een MediaBrowserService aanbieden
+        val browserIntent = Intent("android.media.browse.MediaBrowserService")
+        val services = pm.queryIntentServices(browserIntent, 0)
+        services?.forEach { resolveInfo ->
+            resolveInfo.serviceInfo?.packageName?.let { mediaApps.add(it) }
+        }
+
+        // 3. MediaSessionService (Media3)
+        val media3Intent = Intent("androidx.media3.session.MediaSessionService")
+        pm.queryIntentServices(media3Intent, 0)?.forEach { info ->
+            info.serviceInfo?.packageName?.let { mediaApps.add(it) }
+        }
+
+        // 4. Fallback voor bekende spelers
+        val known = listOf(
+            "com.spotify.music",
+            "com.maxmpz.audioplayer",
+            "com.aimp.player",
+            "de.zorillasoft.musicfolderplayer",
+            "de.zorillasoft.musicfolderplayer.donate",
+            "com.navradio"
+        )
+
+        mediaApps.addAll(known)
+
+        return mediaApps.toList().sorted()
+    }
+
+
+    /*private fun detectMediaApps(): List<String> {
         val pm = packageManager
         val apps = pm.getInstalledApplications(0)
 
@@ -211,6 +287,6 @@ class SettingsActivity : AppCompatActivity() {
 
         // Return sorted list for a clean UI
         return mediaApps.toList().sorted()
-    }
+    } */
 
 }

@@ -44,4 +44,5 @@
     <string name="settings_start_on_app_open">Pornește overlay-ul când aplicația selectată este deschisă</string>
     <string name="settings_media_apps_label">Aplicații player media</string>
 
+    <string name="overlay_size_title">Scalarea overlay‑ului</string>
 </resources>

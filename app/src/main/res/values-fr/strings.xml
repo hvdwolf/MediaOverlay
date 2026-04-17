@@ -44,4 +44,5 @@
     <string name="settings_start_on_app_open">Démarrer l’overlay lorsque l’application sélectionnée s’ouvre</string>
     <string name="settings_media_apps_label">Applications de lecture multimédia</string>
 
+    <string name="overlay_size_title">Mise à l’échelle de l’overlay</string>
 </resources>

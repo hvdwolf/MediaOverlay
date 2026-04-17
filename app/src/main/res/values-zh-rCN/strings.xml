@@ -44,4 +44,5 @@
     <string name="settings_start_on_app_open">打开所选应用时启动覆盖层</string>
     <string name="settings_media_apps_label">媒体播放器应用</string>
 
+    <string name="overlay_size_title">覆盖层缩放</string>
 </resources>

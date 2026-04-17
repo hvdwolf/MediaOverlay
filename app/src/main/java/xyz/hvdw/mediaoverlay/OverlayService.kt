@@ -20,8 +20,10 @@ import android.os.IBinder
 import android.os.Looper
 import android.view.*
 import android.view.animation.LinearInterpolator
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
 
@@ -71,33 +73,36 @@ class OverlayService : Service() {
         val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
         val style = prefs.getInt("overlay_style", 0)
         val alpha = prefs.getInt("overlay_alpha", 200)
+        val scale = prefs.getFloat("overlay_scale", 1.0f)
 
-        // Kies layout
         val layoutId = if (style == 1)
             R.layout.view_overlay_square
         else
             R.layout.view_overlay
 
-        // Correct inflaten
-        overlayView = inflater.inflate(layoutId, null, false)
+        val content = inflater.inflate(layoutId, null, false)
+        overlayView = content
 
-        val titleView = overlayView.findViewById<TextView?>(R.id.titleText)
-        val artistView = overlayView.findViewById<TextView?>(R.id.artistText)
-        val albumView = overlayView.findViewById<TextView?>(R.id.albumText)
-        val root = overlayView.findViewById<View?>(R.id.overlayRoot)
+        applyOverlayScaling(style, scale, content)
 
-        // Marquee-ready
+        val root = content.findViewById<View?>(R.id.overlayRoot)
+        val titleView = content.findViewById<TextView?>(R.id.titleText)
+        val artistView = content.findViewById<TextView?>(R.id.artistText)
+        val albumView = content.findViewById<TextView?>(R.id.albumText)
+
         titleView?.isSelected = true
         artistView?.isSelected = true
         albumView?.isSelected = true
 
-        // LayoutParams PER STIJL
         layoutParams =
             if (style == 1) {
-                // Square overlay: vaste maat
+                // square: scale container
+                val base = dpToPx(250)
+                val scaled = (base * scale).toInt()
+
                 WindowManager.LayoutParams(
-                    dpToPx(250),
-                    dpToPx(250),
+                    scaled,
+                    scaled,
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                     else
@@ -108,7 +113,7 @@ class OverlayService : Service() {
                     PixelFormat.TRANSLUCENT
                 )
             } else {
-                // Classic overlay: wrap_content
+                // classic: start with WRAP_CONTENT, we’ll adjust widths below
                 WindowManager.LayoutParams(
                     WindowManager.LayoutParams.WRAP_CONTENT,
                     WindowManager.LayoutParams.WRAP_CONTENT,
@@ -127,32 +132,189 @@ class OverlayService : Service() {
                 y = 100
             }
 
-        // Achtergrond per stijl
+        // background
         if (root != null) {
-            if (style == 0) {
-                // Klassieke overlay → overlay_background gebruiken
-                val bg = resources.getDrawable(R.drawable.overlay_background, null)
-                bg.alpha = alpha
-                root.background = bg
-            } else {
-                // Vierkante overlay → zwarte achtergrond + ronde hoeken
-                val bg = resources.getDrawable(R.drawable.square_overlay_background, null)
-                bg.alpha = alpha
-                root.background = bg
-            }
+            val bg = if (style == 0)
+                resources.getDrawable(R.drawable.overlay_background, null)
+            else
+                resources.getDrawable(R.drawable.square_overlay_background, null)
+
+            bg.alpha = alpha
+            root.background = bg
         }
 
-        setupOverlayUi(overlayView)
+        // 🔹 classic: scale key child widths instead of using scaleX/scaleY
+        /*if (style == 0) {
+            // CLASSIC OVERLAY SCALING (no scaleX/scaleY)
+
+            val albumArt = content.findViewById<ImageView>(R.id.albumArt)
+            val textBlock = content.findViewById<LinearLayout>(R.id.textBlock)
+            val btnPrev = content.findViewById<ImageButton>(R.id.btnPrev)
+            val btnPlay = content.findViewById<ImageButton>(R.id.btnPlayPause)
+            val btnNext = content.findViewById<ImageButton>(R.id.btnNext)
+
+            // Scale album art width (base 90dp)
+            albumArt.layoutParams.width = (dpToPx(90) * scale).toInt()
+
+            // Scale text block width (base 250dp)
+            textBlock.layoutParams.width = (dpToPx(250) * scale).toInt()
+
+            // Scale text sizes
+            titleView?.textSize = 16f * scale
+            artistView?.textSize = 14f * scale
+            albumView?.textSize = 14f * scale
+
+
+            // Scale buttons (base 40dp)
+            val btnSize = (dpToPx(40) * scale).toInt()
+            btnPrev.layoutParams.width = btnSize
+            btnPrev.layoutParams.height = btnSize
+            btnPlay.layoutParams.width = btnSize
+            btnPlay.layoutParams.height = btnSize
+            btnNext.layoutParams.width = btnSize
+            btnNext.layoutParams.height = btnSize
+
+            // Scale button icons
+            btnPrev.scaleX = scale
+            btnPrev.scaleY = scale
+            btnPlay.scaleX = scale
+            btnPlay.scaleY = scale
+            btnNext.scaleX = scale
+            btnNext.scaleY = scale
+
+
+            // Scale padding (base 8dp)
+            val root = content.findViewById<LinearLayout>(R.id.overlayRoot)
+            val pad = (dpToPx(8) * scale).toInt()
+            root.setPadding(pad, pad, pad, pad)
+
+            // Apply changes
+            albumArt.requestLayout()
+            textBlock.requestLayout()
+            btnPrev.requestLayout()
+            btnPlay.requestLayout()
+            btnNext.requestLayout()
+            root.requestLayout()
+        }
+
+        if (style == 1) {
+            val titleView = content.findViewById<TextView>(R.id.titleText)
+            val artistView = content.findViewById<TextView>(R.id.artistText)
+            val albumView = content.findViewById<TextView>(R.id.albumText)
+
+            val btnPrev = content.findViewById<ImageButton>(R.id.btnPrev)
+            val btnPlay = content.findViewById<ImageButton>(R.id.btnPlayPause)
+            val btnNext = content.findViewById<ImageButton>(R.id.btnNext)
+
+            // Scale text sizes
+            titleView.textSize = 18f * scale
+            artistView.textSize = 14f * scale
+            albumView.textSize = 14f * scale
+
+            // Scale buttons (base 40dp)
+            val btnSize = (dpToPx(40) * scale).toInt()
+            btnPrev.layoutParams.width = btnSize
+            btnPrev.layoutParams.height = btnSize
+            btnPlay.layoutParams.width = btnSize
+            btnPlay.layoutParams.height = btnSize
+            btnNext.layoutParams.width = btnSize
+            btnNext.layoutParams.height = btnSize
+
+            // Scale button icons
+            btnPrev.scaleX = scale
+            btnPrev.scaleY = scale
+            btnPlay.scaleX = scale
+            btnPlay.scaleY = scale
+            btnNext.scaleX = scale
+            btnNext.scaleY = scale
+
+            // Scale padding (base 12dp)
+            val pad = (dpToPx(12) * scale).toInt()
+            val rootSquare = content.findViewById<View>(R.id.overlaySquareRoot)
+            rootSquare.setPadding(pad, pad, pad, pad)
+
+            // Apply changes
+            btnPrev.requestLayout()
+            btnPlay.requestLayout()
+            btnNext.requestLayout()
+            rootSquare.requestLayout()
+        } */
+
+
+        setupOverlayUi(content)
         windowManager.addView(overlayView, layoutParams)
 
-        // Marquee pas starten NA toevoegen overlay
         handler.post { updateOverlayFromMediaSession() }
-
-        //root?.let { makeDraggable(it) }
         makeDraggable(overlayView)
     }
 
+    private fun applyOverlayScaling(style: Int, scale: Float, content: View) {
 
+        // Common views
+        val titleView = content.findViewById<TextView?>(R.id.titleText)
+        val artistView = content.findViewById<TextView?>(R.id.artistText)
+        val albumView = content.findViewById<TextView?>(R.id.albumText)
+
+        val btnPrev = content.findViewById<ImageButton?>(R.id.btnPrev)
+        val btnPlay = content.findViewById<ImageButton?>(R.id.btnPlayPause)
+        val btnNext = content.findViewById<ImageButton?>(R.id.btnNext)
+
+        // -------------------------------
+        // 🔹 TEXT SCALING (common)
+        // -------------------------------
+        if (titleView != null) titleView.textSize = (if (style == 1) 18f else 16f) * scale
+        if (artistView != null) artistView.textSize = 14f * scale
+        if (albumView != null) albumView.textSize = 14f * scale
+
+        // -------------------------------
+        // 🔹 BUTTON SIZE + ICON SCALING (common)
+        // -------------------------------
+        val btnSize = (dpToPx(40) * scale).toInt()
+
+        listOf(btnPrev, btnPlay, btnNext).forEach { btn ->
+            btn?.layoutParams?.width = btnSize
+            btn?.layoutParams?.height = btnSize
+            btn?.scaleX = scale
+            btn?.scaleY = scale
+            btn?.requestLayout()
+        }
+
+        // -------------------------------
+        // 🔹 CLASSIC OVERLAY SPECIFIC
+        // -------------------------------
+        if (style == 0) {
+            val albumArt = content.findViewById<ImageView?>(R.id.albumArt)
+            val textBlock = content.findViewById<LinearLayout?>(R.id.textBlock)
+            val rootClassic = content.findViewById<LinearLayout?>(R.id.overlayRoot)
+
+            // Scale album art width (base 90dp)
+            albumArt?.layoutParams?.width = (dpToPx(90) * scale).toInt()
+
+            // Scale text block width (base 250dp)
+            textBlock?.layoutParams?.width = (dpToPx(250) * scale).toInt()
+
+            // Scale padding (base 8dp)
+            val pad = (dpToPx(8) * scale).toInt()
+            rootClassic?.setPadding(pad, pad, pad, pad)
+
+            albumArt?.requestLayout()
+            textBlock?.requestLayout()
+            rootClassic?.requestLayout()
+        }
+
+        // -------------------------------
+        // 🔹 SQUARE OVERLAY SPECIFIC
+        // -------------------------------
+        if (style == 1) {
+            val rootSquare = content.findViewById<View?>(R.id.overlaySquareRoot)
+
+            // Scale padding (base 12dp)
+            val pad = (dpToPx(12) * scale).toInt()
+            rootSquare?.setPadding(pad, pad, pad, pad)
+
+            rootSquare?.requestLayout()
+        }
+    }
 
 
     private fun setupOverlayUi(view: View) {
@@ -286,16 +448,29 @@ class OverlayService : Service() {
 
         if (controllers.isEmpty()) return null
 
+        // ✅ Filter op geselecteerde apps
+        val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
+        val allowed = prefs.getStringSet("auto_start_apps", emptySet()) ?: emptySet()
+
+        val filtered = if (allowed.isEmpty()) {
+            controllers
+        } else {
+            controllers.filter { allowed.contains(it.packageName) }
+        }
+
+        if (filtered.isEmpty()) return null
+
         NotificationListener.lastPackage?.let { pkg ->
-            controllers.firstOrNull { it.packageName == pkg }?.let { return it }
+            filtered.firstOrNull { it.packageName == pkg }?.let { return it }
         }
 
         lastPackageName?.let { pkg ->
-            controllers.firstOrNull { it.packageName == pkg }?.let { return it }
+            filtered.firstOrNull { it.packageName == pkg }?.let { return it }
         }
 
-        return controllers.firstOrNull()
+        return filtered.firstOrNull()
     }
+
 
     private fun sendTransportControl(action: Long) {
         val controller = getCurrentController() ?: return

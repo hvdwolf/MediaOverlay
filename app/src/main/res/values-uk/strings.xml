@@ -44,4 +44,5 @@
     <string name="settings_start_on_app_open">Запускати оверлей при відкритті вибраного застосунку</string>
     <string name="settings_media_apps_label">Медіаплеєри</string>
 
+    <string name="overlay_size_title">Масштабування оверлею</string>
 </resources>
