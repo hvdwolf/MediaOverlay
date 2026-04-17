@@ -54,8 +54,13 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, OverlayService::class.java)
         startService(intent)
 
-        // 4. Minimize app once
-        minimizeOnce()
+        // 4. Minimize app only when user wants it
+        val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
+        val minimize = prefs.getBoolean("minimize_on_start", false)
+
+        if (minimize) {
+            minimizeOnce()
+        }
     }
 
     private fun stopOverlay() {
