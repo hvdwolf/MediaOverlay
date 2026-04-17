@@ -138,44 +138,5 @@
 
         </FrameLayout>
 
-
-        <!-- AUTOMATIC START -->
-        <TextView
-            android:id="@+id/autoStartHeader"
-            android:text="@string/settings_autostart_header"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <Switch
-            android:id="@+id/switchStartOnPlay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_start_on_play" />
-
-        <Switch
-            android:id="@+id/switchStartOnAppOpen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_start_on_app_open" />
-
-        <TextView
-            android:id="@+id/mediaAppListLabel"
-            android:text="@string/settings_media_apps_label"
-            android:layout_marginTop="12dp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
-            android:id="@+id/mediaAppList"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-
-
     </LinearLayout>
 </ScrollView>

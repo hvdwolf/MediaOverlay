@@ -25,21 +25,9 @@ class NotificationListener : NotificationListenerService() {
         if (!isMedia) return
 
         val prefs = getSharedPreferences("overlay_prefs", MODE_PRIVATE)
-        val startOnPlay = prefs.getBoolean("start_on_play", false)
-        val autoStartApps = prefs.getStringSet("auto_start_apps", emptySet()) ?: emptySet()
-
-        // 🔴 don't act on not selected apps
-        if (!autoStartApps.contains(pkg)) {
-            return
-        }
 
         // Only selected apps get here
         lastPackage = pkg
-
-        if (startOnPlay) {
-            val intent = Intent(applicationContext, OverlayService::class.java)
-            ContextCompat.startForegroundService(applicationContext, intent)
-        }
 
         callback?.invoke()
     }
