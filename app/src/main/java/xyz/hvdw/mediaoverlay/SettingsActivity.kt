@@ -117,7 +117,10 @@ class SettingsActivity : AppCompatActivity() {
         val txtOverlaySizeValue = findViewById<TextView>(R.id.txtOverlaySizeValue)
 
         val currentScale = prefs.getFloat("overlay_scale", 1.0f)
-        val currentIndex = sizeScales.indexOfFirst { it == currentScale }.coerceAtLeast(2)
+        val currentIndex = sizeScales
+            .withIndex()
+            .minByOrNull { (_, value) -> kotlin.math.abs(value - currentScale) }
+            ?.index ?: 2
 
         seekOverlaySize.progress = currentIndex
         txtOverlaySizeValue.text = sizeLabels[currentIndex]
