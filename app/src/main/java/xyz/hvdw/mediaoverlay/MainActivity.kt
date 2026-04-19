@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("already_minimized", false).apply()
+
         val autostart = prefs.getBoolean("autostart_overlay", false)
 
         if (autostart) {
