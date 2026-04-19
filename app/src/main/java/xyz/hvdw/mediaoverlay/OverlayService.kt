@@ -127,9 +127,13 @@ class OverlayService : Service() {
                     PixelFormat.TRANSLUCENT
                 )
             }.apply {
+                val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
+                val savedX = prefs.getInt("overlay_pos_x", 100)
+                val savedY = prefs.getInt("overlay_pos_y", 100)
+
                 gravity = Gravity.TOP or Gravity.START
-                x = 100
-                y = 100
+                x = savedX
+                y = savedY
             }
 
         // background
@@ -251,6 +255,14 @@ class OverlayService : Service() {
                     lp.x = initialX + (event.rawX - initialTouchX).toInt()
                     lp.y = initialY + (event.rawY - initialTouchY).toInt()
                     windowManager.updateViewLayout(overlayView, lp)
+
+                    // Save new position
+                    val prefs = getSharedPreferences("overlay_prefs", Context.MODE_PRIVATE)
+                    prefs.edit()
+                        .putInt("overlay_pos_x", lp.x)
+                        .putInt("overlay_pos_y", lp.y)
+                        .apply()
+
                     true
                 }
                 else -> false
