@@ -18,6 +18,7 @@
             android:id="@+id/bgAlbumArt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:src="@drawable/ic_music_placeholder"
             android:scaleType="centerCrop" />
 
         <View
@@ -43,6 +44,7 @@
             android:textSize="18sp"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
+            android:text="@string/overlay_default_title"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:scrollHorizontally="true"
@@ -56,6 +58,7 @@
             android:textSize="14sp"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
+            android:text="@string/overlay_default_artist"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:scrollHorizontally="true"
