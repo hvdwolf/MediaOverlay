@@ -4,12 +4,22 @@
 
 ## A universal overlay for all mediaplayers that broadcast via MediaSession or NotificationListener.
 
-This is again an app created 80% with AI and 20% "me, myself and I".<br>
-It is a universal overlay for all media players that support the standaard Android MediaSession format. It does not support FYT/Dudu music and FYT/DuDu radio as those are probably the only players in the world that do not support this world standard.<br>
+
+MediaOverlay is a universal overlay for all media players that support the standaard Android MediaSession format. It does not support FYT/Dudu music and FYT/DuDu radio as those are probably the only players in the world that do not support this world standard.<br>
 **Note:** This is an overlay, not a widget. A widget can be put on the home screen, but any app that you start will show on top of the widget, thereby making it no longer visible. An overlay will always "float" on top over any other app.<br>
 This overlay can be dragged to any position on the screen.<br>
 Why this app? DuDu has a widget which supports all mediaplayers that support the MediaSession format. Vasyl91 made the excellent ["Display Media Titles for FYT"](https://xdaforums.com/t/display-media-titles-for-fyt.4692979/).<br>
-So, why this app? I created this app because it is possible and it is slightly different from Vasyl91's "text-only" media titles, and I really don't like the lyrics possibility from the Dudu widget..
+So, why this app? I created this app because it is possible and it is slightly different from Vasyl91's "text-only" media titles, and I really don't like the lyrics possibility from the Dudu widget.<br><br>
+**Features:**
+
+* Draggable to anywhere on screen (and it remembers its position)
+* Scalable (50% to 200%)
+* Shows title, artist, album/collection and album art (when available).
+* Classic "rectangle" view and Square view.
+
+Classic             |  Square
+:-------------------------:|:-------------------------:
+![](./images/classic.png)  |  ![](./images/square.png)
 
 **This app does not collect, store or share any personal information. It is 100% privacy friendly.**
 
@@ -29,8 +39,8 @@ Just download the apk from [Github](https://github.com/hvdwolf/MediaOverlay/rele
 The settings that might need explanation:
 
 - polling interval - the number in seconds it checks for new metadata (default: 10 seconds)
-- transpararency overlay - You can make it from totally solid (100% opaque) to totally (100%) transparent.
-- Media Players:  The app shows all apps that are able to use the media channel to produce audio. That could also be many mediaplayers that you installed. You can here select for which players you want to show the overlay.
+- transpararency overlay - You can make it from totally solid (100% opaque) to totally (100%) transparent.<br>
+![](./images/settings.png)
 
 ## Releases
 The releases are done via [my github](https://github.com/hvdwolf/MediaOverlay/releases/latest).<br>
