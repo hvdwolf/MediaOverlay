@@ -1,4 +1,4 @@
-**Changelog V1.2 (xy Apr 2026)**
+**Changelog V1.2 (19 Apr 2026)**
 
 * [Bug fix] Setting "Start overlay automatically when opening the app" no longer worked -> fixed.
 * Add option to scale the overlay: default size 100%, scalable from 50% to 200%.
